@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('./partials/head') %>
+    <title>TinyTales-BLOG</title>
+    <style>
+      .cover-container {
+        position: relative;
+        height: 400px;
+        overflow: hidden;
+      }
+
+      .cover-container img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        /* Ensure the image covers the container without being cut off */
+      }
+
+      .cover-text {
+        top: 0;
+        left: 0;
+        background: rgba(0, 0, 0, 0.5);
+        /* Optional: adds a dark overlay for better text readability */
+        color: white;
+        text-align: center;
+      }
+
+      h1.display-4 {
+        margin: 0;
+      }
+    </style>
+</head>
+
+<body>
+  <%- include('./partials/nav.ejs') %>
+
+    
+    <div class="container mt-5">
+      <div class="contain-container position-relative text-white">
+        <img src="<%= blog.coverImageURL %>" style="height: 350px;" class="w-75" alt="Cover Image">
+        <div
+          class="cover-text position-absolute w-75 h-100 d-flex flex-column justify-content-center align-items-center">
+          <h1 class="display-4 fw-semibold">
+            <%= blog.title %>
+          </h1>
+        </div>
+      </div>
+      <div class="blog-body mt-4">
+        <div style="font-family: Arial, sans-serif; font-size: 16px;" class="fs-5">
+          <%= blog.body %>
+        </div>
+      </div>
+    </div>
+
+    <div class="container mt-4">
+      <img src="<%= blog.createdBy.profileImageURL %>" width="70px" alt="pp"> <p style="display: inline; font-weight: 700;"><%= blog.createdBy.fullName %></p>
+    </div>
+
+    <div class="container mt-3">
+      <h3>Comments (<%= comments.length %>)</h3>
+      <% if (locals.user) { %>
+      <form action="/blog/comment/<%= blog._id %>" method="post">
+        <div class="mb-3">
+          <input
+            type="text"
+            name="content"
+            class="form-control"
+            placeholder="Enter your comment"
+          />
+          <button class="btn btn-sm btn-primary mt-3" type="submit">Add</button>
+        </div>
+      </form>
+
+      <% } %>
+
+      <% if (!locals.user) { %>
+        <p> To comment on this blog , User must be Logged In!!</p>
+      <% } %>
+      <div class="mt-3">
+        <% comments.forEach(comment => { %>
+        <div style="border: 1px solid grey;" class="my-3">
+          <div class="mt-1">
+          <img src="<%= comment.createdBy.profileImageURL %>" width="70px" style="border-radius: 50%;" />
+          <p style="font-weight: 700; display: inline;"><%= comment.createdBy.fullName %></p> </div><hr>
+          <pre class="mt-2 ms-2 me-2 " style="font-family: Arial, sans-serif; font-size: 16px;"><%= comment.content %></pre>
+        </div> 
+        <% }) %>
+      </div>
+    </div>
+
+
+    <%- include('./partials/scripts') %>
+</body>
